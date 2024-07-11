@@ -48,7 +48,29 @@ class HashcatProcess {
             shouldUseLen = true;
             expectedLen = length - (sign ? 1 : 0);
         }
+        if (base > this.maxbase) {
+            throw new Error(`base must be less than or equal to ${this.maxbase}`);
+        }
 
+        input = Math.abs(input);
+        while (input >= base) {
+            if (shouldUseLen && stack.length >= expectedLen) {
+                break;
+            }
+            num = input % base;
+            input = Math.floor(input / base);
+            stack.push(this.table[num]);
+        }
+        if (input > 0 && input < base) {
+            if (!shouldUseLen || (shouldUseLen && stack.length < expectedLen)) {
+                stack.push(this.table[input]);
+            }
+        }
+
+        for (let i = stack.length - 1; i >= 0; i--) {
+            result += stack[i];
+        }
+        return sign + result;
     }
 }
 
