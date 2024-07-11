@@ -1,5 +1,5 @@
 import fucktable from "./hashprocess/fucktable";
-import type { Options, Hashcat, Hashtable } from "./dist";
+import type { Options, Hashtable, Hashcat } from "./dist";
 
 class HashcatProcess implements Hashcat {
   public table: Hashtable;
@@ -7,8 +7,8 @@ class HashcatProcess implements Hashcat {
   private defaultopt: Options;
 
   constructor(table: Hashtable) {
-    if (!table || typeof table !== 'object' || !Object.keys(table).length) {
-      throw new Error('table must contain a dictionary');
+    if (!table || typeof table !== "object" || !Object.keys(table).length) {
+      throw new Error("table must contain a dictionary");
     }
     this.table = table;
     this.maxbase = Object.keys(this.table).length;
@@ -35,10 +35,10 @@ class HashcatProcess implements Hashcat {
 
   public transformBinary(input: number, options?: Options): string {
     const stack: string[] = [];
-    const sign = input < 0 ? this.table[0] : '';
+    const sign = input < 0 ? this.table[0] : "";
     const { base, length } = { ...this.defaultopt, ...options };
     let num: number;
-    let result = '';
+    let result = "";
     let expectedLen = 0;
     let shouldUseLen = false;
 
@@ -75,8 +75,8 @@ class HashcatProcess implements Hashcat {
   }
 
   public useTable(newTable: Hashtable): void {
-    if (!newTable || typeof newTable !== 'object' || !Object.keys(newTable).length) {
-      throw new Error('newTable must contain a dictionary');
+    if (!newTable || typeof newTable !== "object" || !Object.keys(newTable).length) {
+      throw new Error("newTable must contain a dictionary");
     }
     this.table = newTable;
     this.maxbase = Object.keys(this.table).length;
