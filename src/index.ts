@@ -74,7 +74,15 @@ class HashcatProcess implements Hashcat {
     return sign + result;
   }
 
-  //useTable(newTable: Hashtable): void {}
+  useTable(newTable: Hashtable): void {
+    if (!newTable || typeof newTable !== 'object' || !Object.keys(newTable).length) {
+      throw new Error('invalid table, must to be contains a dictionary with at least one key-value pair');
+    }
+    this.table = newTable;
+    const base = Object.keys(this.table).length;
+    this.maxbase = base;
+    this.defaultopt = { ...this.defaultopt, base };
+  }
 }
 
-const instance = new HashcatProcess()
+const instance = new HashcatProcess();
