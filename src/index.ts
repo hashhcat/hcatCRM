@@ -1,18 +1,21 @@
-import fucktable from "./hashprocess/fucktable";
-import type { Options, Hashtable, Hashcat } from "./dist";
+import { Hashtable, Options, Hashcat } from './dist';
+import bytestables from './hashprocess/fucktable';
 
 class HashcatProcess implements Hashcat {
-  public table: Hashtable;
-  private maxbase: number;
-  private defaultopt: Options;
+  table: Hashtable;
+  defaultopt: Options;
+  maxbase: number;
 
-  constructor(table: Hashtable) {
-    if (!table || typeof table !== "object" || !Object.keys(table).length) {
-      throw new Error("table must contain a dictionary");
-    }
-    this.table = table;
-    this.maxbase = Object.keys(this.table).length;
-    this.defaultopt = { base: this.maxbase };
+  constructor() {
+    this.table = bytestables as Hashtable;
+    const base = Object.keys(this.table).length;
+    this.maxbase = base;
+    this.defaultopt = {
+      base
+    };
+  }
+  useTable(newTable: Hashtable): void {
+    throw new Error('Method not implemented.');
   }
 
   public getHash(input: string, options?: Options): string {
@@ -35,10 +38,10 @@ class HashcatProcess implements Hashcat {
 
   public transformBinary(input: number, options?: Options): string {
     const stack: string[] = [];
-    const sign = input < 0 ? this.table[0] : "";
+    const sign = input < 0 ? this.table['0x0000'] : '';
     const { base, length } = { ...this.defaultopt, ...options };
     let num: number;
-    let result = "";
+    let result = '';
     let expectedLen = 0;
     let shouldUseLen = false;
 
@@ -60,11 +63,11 @@ class HashcatProcess implements Hashcat {
       }
       num = input % base;
       input = Math.floor(input / base);
-      stack.push(this.table[num]);
+      stack.push(this.table[`0x${num.toString(16).toUpperCase().padStart(4, '0')}`]);
     }
     if (input > 0 && input < base) {
       if (!shouldUseLen || (shouldUseLen && stack.length < expectedLen)) {
-        stack.push(this.table[input]);
+        stack.push(this.table[`0x${input.toString(16).toUpperCase().padStart(4, '0')}`]);
       }
     }
 
@@ -73,22 +76,6 @@ class HashcatProcess implements Hashcat {
     }
     return sign + result;
   }
-
-  public useTable(newTable: Hashtable): void {
-    if (!newTable || typeof newTable !== "object" || !Object.keys(newTable).length) {
-      throw new Error("newTable must contain a dictionary");
-    }
-    this.table = newTable;
-    this.maxbase = Object.keys(this.table).length;
-    this.defaultopt.base = this.maxbase;
-  }
 }
 
-const HashcatInstance = new HashcatProcess(fucktable);
-
-export { HashcatInstance, HashcatProcess };
-export const getHash = HashcatInstance.getHash.bind(HashcatInstance);
-export const useTable = HashcatInstance.useTable.bind(HashcatInstance);
-export const getBitwise = HashcatInstance.getBitwise.bind(HashcatInstance);
-export const transformBinary = HashcatInstance.transformBinary.bind(HashcatInstance);
-export default HashcatInstance;
+const instance = new HashcatProcess()
