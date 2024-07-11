@@ -1,3 +1,14 @@
-export type hashtable = { [key: string]: string };
-export type Options = { base: number, len?: number };
-export interface Hashcat { table: hashtable, maxbase: number ,defaultopt: Options }
+export interface Hashtable {
+    [key: number]: string;
+  }
+  
+  export interface Options {
+    base: number;
+    length?: number;
+  }
+  
+  export interface Hashcat {
+    table: Hashtable;
+    maxbase: number;
+    defaultopt: Options;
+}
