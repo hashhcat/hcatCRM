@@ -1,3 +1,5 @@
+/* eslint-disable prettier/prettier */
+
 module.exports = {
     '0x0000': '0', '0x1189': '1', '0x2312': '2', '0x329B': '3',
     '0x4624': '4', '0x57AD': '5', '0x6536': '6', '0x74BF': '7',
