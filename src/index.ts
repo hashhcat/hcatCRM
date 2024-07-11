@@ -14,38 +14,35 @@ class HashcatProcess implements Hashcat {
       base
     };
   }
-  useTable(newTable: Hashtable): void {
-    throw new Error('Method not implemented.');
-  }
 
-  public getHash(input: string, options?: Options): string {
+  getHash(input: string, options?: Options): string {
     return this.transformBinary(this.getBitwise(input), options);
   }
 
-  public getBitwise(str: string): number {
+  getBitwise(str: string): number {
     let hash = 0;
-    if (str.length === 0) {
+    if (str.length == 0) {
       return hash;
     }
 
     for (let i = 0; i < str.length; i++) {
       const ch = str.charCodeAt(i);
       hash = (hash << 5) - hash + ch;
-      hash = hash & hash;
+      hash = hash & hash; //conv to 32bytes int
     }
     return hash;
   }
 
-  public transformBinary(input: number, options?: Options): string {
-    const stack: string[] = [];
-    const sign = input < 0 ? this.table['0x0000'] : '';
-    const { base, length } = { ...this.defaultopt, ...options };
-    let num: number;
+  transformBinary(input: number, options?: Options): string {
+    const stack = [];
+    const sign = input < 0 ? this.table[0] : '';
+    const { base, length } = options ?? this.defaultopt;
+    let num;
     let result = '';
     let expectedLen = 0;
     let shouldUseLen = false;
 
-    if (length !== undefined && !Number.isNaN(length)) {
+    if (length !== null && length !== undefined && !Number.isNaN(length)) {
       if (length <= 0) {
         throw new Error("length must be greater than 0");
       }
@@ -63,11 +60,11 @@ class HashcatProcess implements Hashcat {
       }
       num = input % base;
       input = Math.floor(input / base);
-      stack.push(this.table[`0x${num.toString(16).toUpperCase().padStart(4, '0')}`]);
+      stack.push(this.table[num]);
     }
     if (input > 0 && input < base) {
       if (!shouldUseLen || (shouldUseLen && stack.length < expectedLen)) {
-        stack.push(this.table[`0x${input.toString(16).toUpperCase().padStart(4, '0')}`]);
+        stack.push(this.table[input]);
       }
     }
 
@@ -76,6 +73,8 @@ class HashcatProcess implements Hashcat {
     }
     return sign + result;
   }
+
+  //useTable(newTable: Hashtable): void {}
 }
 
 const instance = new HashcatProcess()
