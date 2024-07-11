@@ -13,6 +13,10 @@ class HashcatProcess {
         this.maxbase = Object.keys(this.table).length;
         this.defaultopt = { base: this.maxbase };
     }
+
+    public getHash(input: string, options?: Options): string {
+        return this.transformBinary(this.getBitwise(input), options);
+    }
 }
 
 const HashcatInstance = new HashcatProcess(fucktable);
