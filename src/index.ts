@@ -31,6 +31,25 @@ class HashcatProcess {
         }
         return hash;
     }
+
+    public transformBinary(input: number, options?: Options): string {
+        const stack = [];
+        const sign = input < 0 ? this.table[0] : '';
+        const { base, length } = { ...this.defaultopt, ...options };
+        let num;
+        let result = '';
+        let expectedLen = 0;
+        let shouldUseLen = false;
+
+        if (length != undefined && !Number.isNaN(length)) {
+            if (length <= 0) {
+                throw new Error("length must be greater than 0");
+            }
+            shouldUseLen = true;
+            expectedLen = length - (sign ? 1 : 0);
+        }
+
+    }
 }
 
 const HashcatInstance = new HashcatProcess(fucktable);
