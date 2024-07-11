@@ -1,5 +1,3 @@
-// hashcatprocess.ts
-
 import fucktable from "./hashprocess/fucktable";
 import type { Options, Hashcat, Hashtable } from "./dist";
 
