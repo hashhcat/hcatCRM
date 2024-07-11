@@ -86,3 +86,8 @@ class HashcatProcess implements Hashcat {
 }
 
 const instance = new HashcatProcess();
+export const getHash = instance.getHash.bind(instance);
+export const getBitwise = instance.getBitwise.bind(instance);
+export const transformBinary = instance.transformBinary.bind(instance);
+export const useTable = instance.useTable.bind(instance);
+export default instance;
