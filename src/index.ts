@@ -1,7 +1,7 @@
 import fucktable from "./hashprocess/fucktable";
 import type { Options, Hashcat, Hashtable } from "./dist";
 
-class HashcatProcess implements Hashcat {
+class HashcatProcess {
     public table: Hashtable;
     private maxbase: number;
     private defaultopt: Options;
