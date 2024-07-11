@@ -17,6 +17,20 @@ class HashcatProcess {
     public getHash(input: string, options?: Options): string {
         return this.transformBinary(this.getBitwise(input), options);
     }
+
+    public getBitwise(str: string): number {
+        let hash = 0;
+        if (str.length === 0) {
+            return hash;
+        }
+
+        for (let i = 0; i < str.length; i++) {
+            const ch = str.charCodeAt(i);
+            hash = (hash << 5) - hash + ch;
+            hash = hash & hash;
+        }
+        return hash;
+    }
 }
 
 const HashcatInstance = new HashcatProcess(fucktable);
